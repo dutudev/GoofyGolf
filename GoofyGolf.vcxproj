@@ -71,19 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(ProjectDir)headers;$(IncludePath)</IncludePath>
     <LibraryPath>E:\raylib\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(ProjectDir)headers;$(IncludePath)</IncludePath>
     <LibraryPath>E:\raylib\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(ProjectDir)headers;$(IncludePath)</IncludePath>
     <LibraryPath>E:\raylib\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\raylib\raylib-5.5_win64_msvc16\include;$(ProjectDir)headers;$(IncludePath)</IncludePath>
     <LibraryPath>E:\raylib\raylib-5.5_win64_msvc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -204,6 +204,12 @@ kernel32.lib
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="source\ball.cpp" />
+    <ClCompile Include="source\map.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\ball.hpp" />
+    <ClInclude Include="headers\map.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
