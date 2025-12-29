@@ -12,6 +12,10 @@ private:
 public:
 	Ball();
 	~Ball();
+	Vector2 GetPosition();
+	Vector2 GetMiddlePosition();
 	void SetPosition(Vector2 posToSet);
+	void SetVelocity(Vector2 velToSet);
+	void Logic();
 	void Draw();
 };

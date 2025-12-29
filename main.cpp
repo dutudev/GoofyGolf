@@ -1,31 +1,62 @@
 #include <iostream>
 #include "raylib.h"
+#include "raymath.h"
 #include "map.hpp"
 #include "ball.hpp"
+
+#define MAXBALLVELOCITY 150.0f
 
 int main() {
 
 	InitWindow(800, 600, "Goofy Golf");
 
+	//game logic vars
+	bool isChoosingDir = false;
+	Vector2 startMousePos = { 0, 0 }, currentMousePos = { 0, 0 }, moveBall, moveBallSmooth;
+	Texture arrowTexture = LoadTexture(((std::string)GetWorkingDirectory() + "/assets/images/arrow.png").c_str());
 	Texture groundTexture = LoadTexture(((std::string)GetWorkingDirectory() + "/assets/images/tilesetmap.png").c_str());
+
+	//ball & map vars
 	Map currentMap;
-	currentMap.LoadMap("testMap");
 	Ball ball;
+	currentMap.LoadMap("testMap");
 	ball.SetPosition(currentMap.GetBallStartPos());
 	while (!WindowShouldClose()) {
 
+		//logic
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			isChoosingDir = true;
+			startMousePos = GetMousePosition();
+			moveBallSmooth = { 0.0f, 0.0f};
+		}
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+			isChoosingDir = false;
+		}
+		if (isChoosingDir) {
+			currentMousePos = GetMousePosition();
+			moveBall = currentMousePos - startMousePos;
+			moveBall *= 1.4f;
+			if (Vector2Length(moveBall) >= MAXBALLVELOCITY) {
+				moveBall = Vector2Normalize(moveBall) * MAXBALLVELOCITY;
+			}
+			moveBall *= -1;
+			moveBallSmooth = Vector2Lerp(moveBallSmooth, moveBall, 6.0f * GetFrameTime());
+		}
+
+		//drawing
 		BeginDrawing();
-		/*
-		Rectangle rect = { 100, 0, 50, 50 };
-		DrawTextureRec(groundTexture, rect, { 0, 0 }, WHITE);
-		*/
 		ClearBackground(BLACK);
 		currentMap.DrawMap(groundTexture);
+		if (isChoosingDir) {
+			DrawLineEx(ball.GetMiddlePosition(), ball.GetMiddlePosition() + moveBallSmooth, 4, BLACK);
+			DrawTexturePro(arrowTexture, { 0.0f, 0.0f, (float)arrowTexture.height, (float)arrowTexture.width }, { (ball.GetMiddlePosition() + moveBallSmooth).x, (ball.GetMiddlePosition() + moveBallSmooth).y, (float)arrowTexture.height, (float)arrowTexture.width}, { (float)arrowTexture.height / 2.0f, (float)arrowTexture.width / 2.0f }, atan2((moveBallSmooth).y, (moveBallSmooth).x) * 180.0f/PI + 90.0f, WHITE);
+		}
+		//DrawCircle(GetMouseX(), GetMouseY(), 4, RED);
 		ball.Draw();
 		EndDrawing();
 
 	}
-
+	UnloadTexture(arrowTexture);
 	UnloadTexture(groundTexture);
 
 	return 0;
