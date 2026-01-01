@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include "raylib.h"
 #include "raymath.h"
 #include "map.hpp"
@@ -8,17 +9,21 @@
 #define MAXBALLVELOCITY 150.0f
 
 using std::vector;
+using std::string;
 
 int main() {
 
 	InitWindow(800, 600, "Goofy Golf");
-
+	InitAudioDevice();
 	//game logic vars
 	bool isChoosingDir = false;
+	int strokes = 0;
 	Vector2 startMousePos = { 0, 0 }, currentMousePos = { 0, 0 }, moveBall, moveBallSmooth;
 	Texture arrowTexture = LoadTexture(((std::string)GetWorkingDirectory() + "/assets/images/arrow.png").c_str());
 	Texture groundTexture = LoadTexture(((std::string)GetWorkingDirectory() + "/assets/images/tilesetmap.png").c_str());
 	Font font = LoadFont(((std::string)GetWorkingDirectory() + "/assets/fonts/RobotoMonoBold.ttf").c_str());
+	Sound ballHit = LoadSound(((std::string)GetWorkingDirectory() + "/assets/sounds/ballHit.wav").c_str());
+	Sound ballDrop = LoadSound(((std::string)GetWorkingDirectory() + "/assets/sounds/ballDrop.wav").c_str());
 	vector<Rectangle> mapWalls;
 
 	//ball & map vars
@@ -27,6 +32,7 @@ int main() {
 	Ball ball;
 	currentMap.LoadMap("testMap", mapWalls);
 	ball.SetPosition(currentMap.GetBallStartPos());
+	ball.SetBallDropSound(&ballDrop);
 	holePos = currentMap.GetHolePos();
 	while (!WindowShouldClose()) {
 
@@ -40,6 +46,8 @@ int main() {
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isChoosingDir) {
 				isChoosingDir = false;
 				ball.SetVelocity(moveBall * 6.0f);
+				strokes++;
+				PlaySound(ballHit);
 			}
 			if (isChoosingDir) {
 				currentMousePos = GetMousePosition();
@@ -67,9 +75,12 @@ int main() {
 		ball.Draw();
 
 
-		//draw ui
-		DrawTextPro(font, "Hole: ", { 10.0f, MeasureTextEx(font, "Hole: ", 20, 0).y / 2.0f + 545.0f }, { 0, 0 }, 0, 20, 0, WHITE);
-		DrawTextPro(font, "Strokes: ", { 10.0f, MeasureTextEx(font, "Strokes: ", 20, 0).y / 2.0f + 565.0f }, { 0, 0 }, 0, 20, 0, WHITE);
+		//draw ui TODO: add alpha when ball is close
+		string holesString = "Holes : ";
+		string strokesString = "Strokes : " + std::to_string(strokes);
+		DrawRectangleRounded({ -55.0f, 543.0f, MeasureTextEx(font, strokesString.c_str(), 20, 0).x + 75, 90.0f}, 0.5f, 2, {0, 0, 0, 100});
+		DrawTextPro(font, holesString.c_str(), {10.0f, MeasureTextEx(font, holesString.c_str(), 20, 0).y / 2.0f + 545.0f}, {0, 0}, 0, 20, 0, WHITE);
+		DrawTextPro(font, strokesString.c_str(), {10.0f, MeasureTextEx(font, strokesString.c_str(), 20, 0).y / 2.0f + 565.0f}, {0, 0}, 0, 20, 0, WHITE);
 
 		//debug Drawing
 		/*
@@ -82,8 +93,11 @@ int main() {
 		EndDrawing();
 
 	}
+	UnloadFont(font);
+	UnloadSound(ballDrop);
+	UnloadSound(ballHit);
 	UnloadTexture(arrowTexture);
 	UnloadTexture(groundTexture);
-
+	CloseAudioDevice();
 	return 0;
 }

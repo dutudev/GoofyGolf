@@ -33,6 +33,10 @@ bool Ball::IsMoving() {
 	return false;
 }
 
+void Ball::SetBallDropSound(Sound* sound) {
+	ballDrop = sound;
+}
+
 void Ball::SetPosition(Vector2 posToSet) {
 	position = posToSet;
 }
@@ -61,6 +65,7 @@ void Ball::Logic(vector<Rectangle>& mapWalls, Vector2& holePos) {
 	if (CheckCollisionCircles(GetMiddlePosition(), 15, holePos, 10)) {
 		hitHole = true;
 		hitPosition = position;
+		PlaySound(*ballDrop);
 		return;
 	}
 
@@ -108,6 +113,7 @@ void Ball::Logic(vector<Rectangle>& mapWalls, Vector2& holePos) {
 		}
 	}
 }
+
 
 void Ball::Draw() {
 	DrawTextureEx(ballTexture, { position.x, position.y }, 0, hitProgress / 1.5f, WHITE);

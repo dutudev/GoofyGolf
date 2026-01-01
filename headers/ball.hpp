@@ -16,6 +16,7 @@ private:
 	Vector2 velocity = { 0, 0 };
 	Vector2 hitPosition = { 0, 0 };
 	Texture ballTexture;
+	Sound* ballDrop = 0;
 	//add something for decel maybe
 public:
 	Ball();
@@ -24,6 +25,7 @@ public:
 	Vector2 GetMiddlePosition();
 	bool GetHitHole();
 	bool IsMoving();
+	void SetBallDropSound(Sound* sound);
 	void SetPosition(Vector2 posToSet);
 	void SetVelocity(Vector2 velToSet);
 	void Logic(vector<Rectangle>& mapWalls, Vector2& holePos);
