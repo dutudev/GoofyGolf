@@ -2,16 +2,22 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <vector>
 #include "raylib.h"
 #include "map.hpp"
 
 using std::string;
+using std::vector;
 
 Vector2 Map::GetBallStartPos() {
 	return {ballStartPosition.x * 50, ballStartPosition.y * 50};
 }
 
-bool Map::LoadMap(string filePath) {
+bool Map::LoadMap(string filePath, vector<Rectangle>& walls) {
+	if (walls.size() > 0) {
+		walls.clear();
+	}
+
 	filePath = (std::string)GetWorkingDirectory() + "/assets/maps/" + filePath + ".csv";
 	std::fstream mapFile;
 	
@@ -34,6 +40,9 @@ bool Map::LoadMap(string filePath) {
 						else if(numberCur == 20) {
 							ballStartPosition = { (float)j, (float)i };
 							numberCur = 0;
+						}
+						if (numberCur >= 1 && numberCur <= 13) {
+							walls.push_back(Rectangle{ j * 50.0f, i * 50.0f, 50, 50 });
 						}
 						mapData[j][i] = numberCur;
 						//std::cout << mapData[j][i] << ' ' << j << ' ' << i << '\n';

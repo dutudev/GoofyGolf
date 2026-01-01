@@ -1,10 +1,13 @@
 #include <iostream>
+#include <vector>
 #include "raylib.h"
 #include "raymath.h"
 #include "map.hpp"
 #include "ball.hpp"
 
 #define MAXBALLVELOCITY 150.0f
+
+using std::vector;
 
 int main() {
 
@@ -15,11 +18,12 @@ int main() {
 	Vector2 startMousePos = { 0, 0 }, currentMousePos = { 0, 0 }, moveBall, moveBallSmooth;
 	Texture arrowTexture = LoadTexture(((std::string)GetWorkingDirectory() + "/assets/images/arrow.png").c_str());
 	Texture groundTexture = LoadTexture(((std::string)GetWorkingDirectory() + "/assets/images/tilesetmap.png").c_str());
+	vector<Rectangle> mapWalls;
 
 	//ball & map vars
 	Map currentMap;
 	Ball ball;
-	currentMap.LoadMap("testMap");
+	currentMap.LoadMap("testMap", mapWalls);
 	ball.SetPosition(currentMap.GetBallStartPos());
 	while (!WindowShouldClose()) {
 
@@ -31,6 +35,7 @@ int main() {
 		}
 		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
 			isChoosingDir = false;
+			ball.SetVelocity(moveBall * 6.0f);
 		}
 		if (isChoosingDir) {
 			currentMousePos = GetMousePosition();
@@ -42,6 +47,7 @@ int main() {
 			moveBall *= -1;
 			moveBallSmooth = Vector2Lerp(moveBallSmooth, moveBall, 6.0f * GetFrameTime());
 		}
+		ball.Logic(mapWalls);
 
 		//drawing
 		BeginDrawing();
@@ -53,6 +59,14 @@ int main() {
 		}
 		//DrawCircle(GetMouseX(), GetMouseY(), 4, RED);
 		ball.Draw();
+
+		//debug Drawing
+		/*
+		for (Rectangle rect : mapWalls) {
+			//DrawRectangle(rect.x, rect.y, rect.width, rect.height, { 255, 255, 255, 150 });
+			DrawRectangleLines(rect.x, rect.y, rect.width, rect.height, RED);
+			DrawCircleLines(ball.GetMiddlePosition().x, ball.GetMiddlePosition().y, 15, RED);
+		}*/
 		EndDrawing();
 
 	}
