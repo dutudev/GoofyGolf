@@ -10,7 +10,11 @@ using std::string;
 using std::vector;
 
 Vector2 Map::GetBallStartPos() {
-	return {ballStartPosition.x * 50, ballStartPosition.y * 50};
+	return {ballStartPosition.x * 50.0f, ballStartPosition.y * 50.0f };
+}
+
+Vector2 Map::GetHolePos() {
+	return { holePosition.x * 50.0f + 25.0f, holePosition.y * 50.0f + 25.0f };
 }
 
 bool Map::LoadMap(string filePath, vector<Rectangle>& walls) {

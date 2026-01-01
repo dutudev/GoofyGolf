@@ -22,6 +22,17 @@ Vector2 Ball::GetMiddlePosition() {
 	return position + Vector2{ 50.0f, 50.0f } / 2.0f;
 }
 
+bool Ball::GetHitHole() {
+	return hitHole;
+}
+
+bool Ball::IsMoving() {
+	if (Vector2Length(velocity) > 0.2) {
+		return true;
+	}
+	return false;
+}
+
 void Ball::SetPosition(Vector2 posToSet) {
 	position = posToSet;
 }
@@ -30,7 +41,14 @@ void Ball::SetVelocity(Vector2 velToSet) {
 	velocity = velToSet;
 }
 
-void Ball::Logic(vector<Rectangle> mapWalls) {
+void Ball::Logic(vector<Rectangle>& mapWalls, Vector2& holePos) {
+	if (hitHole) {
+		hitProgress -= GetFrameTime() / 0.35f;
+		hitProgress = Clamp(hitProgress, 0.0f, 1.0f);
+		position = Vector2Lerp(holePos, hitPosition, hitProgress / 1.5f);
+		return;
+	}
+
 	if (Vector2Length(velocity) - decedeceleration * GetFrameTime() <= 0) {
 		velocity = Vector2Zero();
 	}
@@ -39,6 +57,13 @@ void Ball::Logic(vector<Rectangle> mapWalls) {
 	}
 	position += velocity * GetFrameTime();
 	
+	//check to see if it hit hole
+	if (CheckCollisionCircles(GetMiddlePosition(), 15, holePos, 10)) {
+		hitHole = true;
+		hitPosition = position;
+		return;
+	}
+
 
 	// collision for window screen
 	if (position.x + 10 <= 0 && velocity.x <= 0) {
@@ -85,5 +110,5 @@ void Ball::Logic(vector<Rectangle> mapWalls) {
 }
 
 void Ball::Draw() {
-	DrawTexture(ballTexture, position.x, position.y, WHITE);
+	DrawTextureEx(ballTexture, { position.x, position.y }, 0, hitProgress / 1.5f, WHITE);
 }

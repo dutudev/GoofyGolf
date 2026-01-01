@@ -12,6 +12,7 @@ private:
 	Vector2 holePosition, ballStartPosition;
 public:
 	Vector2 GetBallStartPos();
+	Vector2 GetHolePos();
 	bool LoadMap(string filePath, vector<Rectangle>& walls);
 	void DrawMap(const Texture& mapTexture);
 };
