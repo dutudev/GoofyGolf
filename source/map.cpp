@@ -48,8 +48,12 @@ bool Map::LoadMap(string filePath, vector<Rectangle>& walls) {
 							//std::cout << "GURT YO" << '\n';
 							numberCur = 0;
 						}
-						if (numberCur >= 1 && numberCur <= 13) {
+						
+						if ((numberCur >= 1 && numberCur <= 13) || (numberCur >= 21 && numberCur <=22)) {
 							walls.push_back(Rectangle{ j * 50.0f, i * 50.0f, 50, 50 });
+						}
+						if (numberCur > 20) {
+							numberCur--;
 						}
 						mapData[j][i] = numberCur;
 						//std::cout << mapData[j][i] << ' ' << j << ' ' << i << '\n';
@@ -65,8 +69,12 @@ bool Map::LoadMap(string filePath, vector<Rectangle>& walls) {
 					//std::cout << "GURT YO" << '\n';
 					numberCur = 0;
 				}
-				if (numberCur >= 1 && numberCur <= 13) {
+				
+				if ((numberCur >= 1 && numberCur <= 13) || (numberCur >= 21 && numberCur <= 22)){
 					walls.push_back(Rectangle{ j * 50.0f, i * 50.0f, 50, 50 });
+				}
+				if (numberCur > 20) {
+					numberCur--;
 				}
 				mapData[j][i] = numberCur;
 				//std::cout << mapData[j][i] << ' ' << j << ' ' << i << '\n';

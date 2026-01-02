@@ -12,11 +12,11 @@ const float screenWidth = 800;
 void main(){
     vec2 timeVec = vec2(time, time);
     //timeVec.y *= screenWidth / screenHeight;
-    vec2 uv = (fragTexCoord) * vec2(20, 1) + timeVec;
+    vec2 uv = (fragTexCoord) * vec2(22, 1) + timeVec;
     uv.x *= screenWidth / screenHeight;
     uv *= 10;
     uv = fract(uv);
-    uv *= vec2(0.05, 1);
+    uv *= vec2(0.045, 1);
     //fragColor = vec4(uv.x, uv.y, 0, 1);
     fragColor = texture(texture0, uv);
 }

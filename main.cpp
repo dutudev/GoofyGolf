@@ -14,6 +14,14 @@ using std::string;
 void InitMaps(vector<string>* maps) {
 	maps->push_back("map1");
 	maps->push_back("map2");
+	maps->push_back("map3");
+	maps->push_back("map4");
+	maps->push_back("map5");
+	maps->push_back("map6");
+	maps->push_back("map7");
+	maps->push_back("map8");
+	maps->push_back("map9");
+	maps->push_back("map10");
 }
 
 void SetMap(Map& currentMap, vector<string>& allMaps, int& currentHole, Ball& ball, Sound& ballDrop, vector<Rectangle>& mapWalls, Vector2& holePos) {
@@ -25,13 +33,17 @@ void SetMap(Map& currentMap, vector<string>& allMaps, int& currentHole, Ball& ba
 	holePos = currentMap.GetHolePos();
 }
 
-void NextMap(Map& currentMap, vector<string>& allMaps, int& currentHole, Ball& ball, Sound& ballDrop, vector<Rectangle>& mapWalls, Vector2& holePos, int& strokesTotal, int& strokes) {
+void NextMap(Map& currentMap, vector<string>& allMaps, int& currentHole, Ball& ball, Sound& ballDrop, vector<Rectangle>& mapWalls, Vector2& holePos, int& strokesTotal, int& strokes,int& currentMenu, float& finishTime) {
 	currentHole++;
 	strokesTotal += strokes;
 	strokes = 0;
+
 	if (currentHole == allMaps.size() + 1) {
 		//send to next map
 		std::cout << "DEBUG: Finished maps\n";
+		currentHole = 0;
+		currentMenu = 2;
+		finishTime = GetTime();
 		return;
 	}
 	SetMap(currentMap, allMaps, currentHole, ball, ballDrop, mapWalls, holePos);
@@ -46,14 +58,14 @@ inline float easeInExpo(float x) {
 }
 
 int main() {
-	SetConfigFlags(FLAG_WINDOW_UNDECORATED);
+	//SetConfigFlags(FLAG_WINDOW_UNDECORATED);
 	InitWindow(800, 600, "Goofy Golf");
 	InitAudioDevice();
 	bool ShouldExit = false;
 	bool tutorial = true, tutorialExit = false;
 	float tutorialP = 1;
-	bool transition = false;
-	float progressTransition = 0, needTransition = 0, progressUnclampedTransition = 0;
+	bool transition = false, speedrunMode = false;
+	float progressTransition = 0, needTransition = 0, progressUnclampedTransition = 0, startTime= 0, finishTime = 0;
 	SetExitKey(KEY_NULL);
 	//game logic vars
 	bool isChoosingDir = false;
@@ -101,7 +113,7 @@ int main() {
 		if (transition) {
 			if (progressUnclampedTransition >= 1.5f && needTransition == 1) {
 				needTransition = 0;
-				NextMap(currentMap, allMaps, currentHole, ball, ballDrop, mapWalls, holePos, strokesTotal, strokes);
+				NextMap(currentMap, allMaps, currentHole, ball, ballDrop, mapWalls, holePos, strokesTotal, strokes, currentMenu, finishTime);
 			}
 			if (needTransition == 1) {
 				progressUnclampedTransition += GetFrameTime() / 0.5f;
@@ -115,6 +127,11 @@ int main() {
 			}
 			
 			progressTransition = Clamp(progressUnclampedTransition, 0.0f, 1.0f);
+		}
+
+		if (IsKeyPressed(KEY_TAB)) {
+			speedrunMode = !speedrunMode;
+			std::cout << speedrunMode;
 		}
 
 		if (currentHole == 0) {
@@ -168,6 +185,8 @@ int main() {
 						case 0:
 							needTransition = 1;
 							transition = true;
+							startTime = GetTime() - 1.0f;
+							strokesTotal = 0;
 							break;
 						case 1:
 							currentMenu = 1;
@@ -260,6 +279,10 @@ int main() {
 				
 				DrawTextPro(font, "Exit", v5 - v6, { 0,0 }, 0, 64, 0, WHITE);
 				
+				if (speedrunMode) {
+					DrawTextPro(font, "Timer Activated", v7 - MeasureTextEx(font, "Timer Activated", 24, 0) / 2.0f - Vector2{0, 25}, {0,0}, 0, 24, 0, WHITE);
+				}
+
 				DrawTextPro(font, "Game made by dutudev :)", v7 - v8, { 0,0 }, 0, 20, 0, WHITE);
 				DrawRectangleRoundedLinesEx(currentRect, 0.2f, 2, (sin(GetTime() * 6.0f) + 1) / 2.0f * 4 + 2, WHITE);
 				if (tutorial) {
@@ -272,7 +295,8 @@ int main() {
 					DrawTextPro(font, "Click and drag to aim, then release to hit the ball", Vector2{ 400, 150 } - MeasureTextEx(font, "Click and drag to aim, then release to hit the ball", 32, 0) / 2.0f, { 0,0 }, 0, 32, 0, { 255,255,255,(unsigned char)(255 * tutorialP) });
 					DrawTexture(tutorial1Texture, 400 - tutorial1Texture.width / 2.0f, 170, { 255,255,255,(unsigned char)(255 * tutorialP) });
 					DrawTextPro(font, "To navigate menus, use W (up), S (down), SPACE (confirm)", Vector2{ 400, 300 } - MeasureTextEx(font, "To navigate menus, use W (up), S (down), SPACE (confirm)", 30, 0) / 2.0f, { 0,0 }, 0, 30, 0, { 255,255,255,(unsigned char)(255 * tutorialP) });
-					DrawTextPro(font, "Press Space to continue", Vector2{ 400, 390 } - MeasureTextEx(font, "Press Space to continue", 32, 0) / 2.0f, { 0,0 }, 0, 32, 0, { 255,255,255,(unsigned char)(255 * tutorialP) });
+					DrawTextPro(font, "psst, press TAB for speedrunner mode", Vector2{ 400, 380 } - MeasureTextEx(font, "psst, press TAB for speedrunner mode", 26, 0) / 2.0f, { 0,0 }, 0, 26, 0, { 255,255,255,(unsigned char)(255 * tutorialP) });
+					DrawTextPro(font, "Press Space to continue", Vector2{ 400, 490 } - MeasureTextEx(font, "Press Space to continue", 32, 0) / 2.0f, { 0,0 }, 0, 32, 0, { 255,255,255,(unsigned char)(255 * tutorialP) });
 					if (tutorialP <= 0) {
 						tutorial = false;
 					}
@@ -284,6 +308,8 @@ int main() {
 				DrawTextPro(font, "A little game about golf made in cpp using raylib\nPart of dutu's Nerve Collection\nTo learn more, watch my yt\nMade with <3 by dutudev", v11 - v12, { 0,0 }, 0, 32, 0, WHITE);
 				DrawTextPro(font, "Back To Main Menu", Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0) / 2.0f, {0,0}, 0, 64, 0, WHITE);
 				DrawRectangleRoundedLinesEx({ (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0)/2.0f).x-10, (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0)/2.0f).y-5, MeasureTextEx(font, "Back To Main Menu", 64, 0).x + 20, MeasureTextEx(font, "Back To Main Menu", 64, 0).y + 10 }, 0.2f, 2, (sin(GetTime() * 6.0f) + 1) / 2.0f * 4 + 2, WHITE); // got tired of declaring vectors but this is awful
+				break;
+			case 2:
 				break;
 			}
 			
@@ -304,6 +330,16 @@ int main() {
 			DrawRectangleRounded({ -55.0f, 543.0f, MeasureTextEx(font, strokesString.c_str(), 20, 0).x + 75, 90.0f }, 0.5f, 2, { 0, 0, 0, 100 });
 			DrawTextPro(font, holesString.c_str(), { 10.0f, MeasureTextEx(font, holesString.c_str(), 20, 0).y / 2.0f + 545.0f }, { 0, 0 }, 0, 20, 0, WHITE);
 			DrawTextPro(font, strokesString.c_str(), { 10.0f, MeasureTextEx(font, strokesString.c_str(), 20, 0).y / 2.0f + 565.0f }, { 0, 0 }, 0, 20, 0, WHITE);
+			if (speedrunMode) {
+				float timeCur = GetTime() - startTime;
+				int mins, secs, msecs;
+				mins = timeCur / 60;
+				secs = (int)timeCur % 60;
+				msecs = floor((timeCur - floor(timeCur)) * 100.0f);
+				string time = (std::to_string(mins) + "m " + std::to_string(secs) + "s " + std::to_string(msecs));
+				DrawRectangleRounded({ 800.0f - MeasureTextEx(font, "00m 00s 000", 20, 0).x - 20, 565.0f,  250, 90.0f }, 0.5f, 2, { 0, 0, 0, 100 });
+				DrawTextPro(font, time.c_str(), { 800.0f - MeasureTextEx(font, "00m 00s 000", 20, 0).x , 600 - 28.0f }, { 0,0 }, 0, 20, 0, WHITE);
+			}
 
 			//debug Drawing
 			/*
