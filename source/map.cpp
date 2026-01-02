@@ -33,16 +33,19 @@ bool Map::LoadMap(string filePath, vector<Rectangle>& walls) {
 			while (getline(mapFile, currentNumberStr)) {
 				int numberCur = 0;
 				for (int y = 0; y < currentNumberStr.length(); y++) {
-					if (currentNumberStr[y] != ',') {
+					if (currentNumberStr[y] != ',' || y == currentNumberStr.length() - 1) {
 						numberCur *= 10;
 						numberCur += currentNumberStr[y] - '0';
+						//std::cout << numberCur << '\n';
 					}
 					else {
+						//std::cout << numberCur << '\n';
 						if (numberCur == 15) {
 							holePosition = { (float)j, (float)i };
 						}
 						else if(numberCur == 20) {
 							ballStartPosition = { (float)j, (float)i };
+							//std::cout << "GURT YO" << '\n';
 							numberCur = 0;
 						}
 						if (numberCur >= 1 && numberCur <= 13) {
@@ -53,6 +56,17 @@ bool Map::LoadMap(string filePath, vector<Rectangle>& walls) {
 						numberCur = 0;
 						j++;
 					}
+				}
+				if (numberCur == 15) {
+					holePosition = { (float)j, (float)i };
+				}
+				else if (numberCur == 20) {
+					ballStartPosition = { (float)j, (float)i };
+					//std::cout << "GURT YO" << '\n';
+					numberCur = 0;
+				}
+				if (numberCur >= 1 && numberCur <= 13) {
+					walls.push_back(Rectangle{ j * 50.0f, i * 50.0f, 50, 50 });
 				}
 				mapData[j][i] = numberCur;
 				//std::cout << mapData[j][i] << ' ' << j << ' ' << i << '\n';

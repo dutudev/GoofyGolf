@@ -25,9 +25,11 @@ public:
 	Vector2 GetMiddlePosition();
 	bool GetHitHole();
 	bool IsMoving();
+	bool IsFinish();
 	void SetBallDropSound(Sound* sound);
 	void SetPosition(Vector2 posToSet);
 	void SetVelocity(Vector2 velToSet);
+	void Reset();
 	void Logic(vector<Rectangle>& mapWalls, Vector2& holePos);
 	void Draw();
 };

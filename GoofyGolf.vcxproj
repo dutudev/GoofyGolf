@@ -211,6 +211,10 @@ kernel32.lib
     <ClInclude Include="headers\ball.hpp" />
     <ClInclude Include="headers\map.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\mainMenuBG.glsl" />
+    <None Include="assets\shaders\transition.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

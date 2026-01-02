@@ -11,6 +11,7 @@ Ball::Ball() {
 }
 
 Ball::~Ball() {
+	ballDrop = 0;
 	UnloadTexture(ballTexture);
 }
 
@@ -31,6 +32,21 @@ bool Ball::IsMoving() {
 		return true;
 	}
 	return false;
+}
+
+bool Ball::IsFinish() {
+	if (hitProgress <= 0) {
+		return true;
+	}
+	return false;
+}
+
+void Ball::Reset() {
+	hitHole = false;
+	hitProgress = 1.5f;
+	position = { 0, 0 };
+	velocity = { 0, 0 };
+	hitPosition = { 0, 0 };
 }
 
 void Ball::SetBallDropSound(Sound* sound) {
