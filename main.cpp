@@ -22,6 +22,11 @@ void InitMaps(vector<string>* maps) {
 	maps->push_back("map8");
 	maps->push_back("map9");
 	maps->push_back("map10");
+	maps->push_back("map11");
+	maps->push_back("map12");
+	maps->push_back("map13");
+	maps->push_back("map14");
+	maps->push_back("map15");
 }
 
 void SetMap(Map& currentMap, vector<string>& allMaps, int& currentHole, Ball& ball, Sound& ballDrop, vector<Rectangle>& mapWalls, Vector2& holePos) {
@@ -57,7 +62,7 @@ inline float easeInExpo(float x) {
 	return x == 0 ? 0 : pow(2, 10 * x - 10);
 }
 
-int main() {
+int WinMain() {
 	//SetConfigFlags(FLAG_WINDOW_UNDECORATED);
 	InitWindow(800, 600, "Goofy Golf");
 	InitAudioDevice();
@@ -87,7 +92,7 @@ int main() {
 	int shaderTimeLoc = GetShaderLocation(mainMenuShader, "time");
 	int shaderTransitionLoc = GetShaderLocation(transitionShader, "progress");
 	//main menu vars
-	int currentButton = 0, currentMenu = 0;
+	int currentButton = 0, currentMenu = 0; // 0
 	float currentProgress = 1;
 	Rectangle currentRect, lastRect, nextRect = {0, 0, 0, 0};
 	if (nextRect.x == 0) { // made this so v2 and rect1 delete when out of scope
@@ -208,6 +213,11 @@ int main() {
 				if (IsKeyPressed(KEY_SPACE)) {
 					currentMenu = 0;
 				}
+				break;
+			case 2:
+				if (IsKeyPressed(KEY_SPACE)) {
+					currentMenu = 0;
+				}
 			}
 			
 		}
@@ -267,6 +277,12 @@ int main() {
 			Vector2 v10 = MeasureTextEx(font, "About", 128, 0) / 2.0f;
 			Vector2 v11 = { 400, 300 };
 			Vector2 v12 = MeasureTextEx(font, "A little game about golf made in cpp using raylib\nPart of dutu's Nerve Collection\nTo learn more, watch my yt\nMade with <3 by dutudev", 32, 0) / 2.0f;
+			float timeCur = finishTime - startTime;
+			int mins, secs, msecs;
+			mins = timeCur / 60;
+			secs = (int)timeCur % 60;
+			msecs = floor((timeCur - floor(timeCur)) * 100.0f);
+			string time = (std::to_string(mins) + "m " + std::to_string(secs) + "s " + std::to_string(msecs));
 			switch (currentMenu) {
 			case 0:
 				
@@ -310,6 +326,13 @@ int main() {
 				DrawRectangleRoundedLinesEx({ (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0)/2.0f).x-10, (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0)/2.0f).y-5, MeasureTextEx(font, "Back To Main Menu", 64, 0).x + 20, MeasureTextEx(font, "Back To Main Menu", 64, 0).y + 10 }, 0.2f, 2, (sin(GetTime() * 6.0f) + 1) / 2.0f * 4 + 2, WHITE); // got tired of declaring vectors but this is awful
 				break;
 			case 2:
+				
+				DrawTextPro(font, "Finish", v9 - MeasureTextEx(font, "Finish", 128, 0) / 2.0f, { 0,0 }, 0, 128, 0, WHITE);
+				DrawTextPro(font, ("Total Strokes : " + std::to_string(strokesTotal)).c_str(), Vector2{400, 250} - MeasureTextEx(font, ("Total Strokes : " + std::to_string(strokesTotal)).c_str(), 32, 0) / 2.0f, {0,0}, 0, 32, 0, WHITE);
+				DrawTextPro(font, ("Finish Time : " + time).c_str(), Vector2{ 400, 300 } - MeasureTextEx(font, ("Finish Time : " + time).c_str(), 32, 0) / 2.0f, {0,0}, 0, 32, 0, WHITE);
+				DrawTextPro(font, "Thanks For Playing!", Vector2{400, 350} - MeasureTextEx(font, "Thanks For Playing!", 36, 0) / 2.0f, {0,0}, 0, 36, 0, WHITE);
+				DrawTextPro(font, "Back To Main Menu", Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 32, 0) / 2.0f, { 0,0 }, 0, 32, 0, WHITE);
+				DrawRectangleRoundedLinesEx({ (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 32, 0) / 2.0f).x - 10, (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 32, 0) / 2.0f).y - 5, MeasureTextEx(font, "Back To Main Menu", 32, 0).x + 20, MeasureTextEx(font, "Back To Main Menu", 32, 0).y + 10 }, 0.2f, 2, (sin(GetTime() * 6.0f) + 1) / 2.0f * 4 + 2, WHITE);
 				break;
 			}
 			
