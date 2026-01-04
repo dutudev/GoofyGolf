@@ -218,6 +218,7 @@ int WinMain() {
 				if (IsKeyPressed(KEY_SPACE)) {
 					currentMenu = 0;
 				}
+				break;
 			}
 			
 		}
