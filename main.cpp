@@ -64,6 +64,7 @@ inline float easeInExpo(float x) {
 
 int WinMain() {
 	//SetConfigFlags(FLAG_WINDOW_UNDECORATED);
+	//SetTargetFPS(25);
 	InitWindow(800, 600, "Goofy Golf");
 	InitAudioDevice();
 	bool ShouldExit = false;
@@ -264,7 +265,7 @@ int WinMain() {
 			SetShaderValue(mainMenuShader, shaderTimeLoc, &shaderTime, SHADER_UNIFORM_FLOAT);
 
 			BeginShaderMode(mainMenuShader);
-			DrawTexturePro(groundTexture, { 0, 0, 50, 50 }, { 0, 0, 800, 600 }, { 0, 0 }, 0, WHITE);
+			DrawTexturePro(arrowTexture, { 0, 0, (float)arrowTexture.height, (float)arrowTexture.width }, { 0, 0, 800, 600 }, { 0, 0 }, 0, WHITE);
 			EndShaderMode();
 			Vector2 v1 = { 640, 200 };
 			Vector2 v2 = MeasureTextEx(font, "Start", 64, 0) / 2.0f;
@@ -277,7 +278,7 @@ int WinMain() {
 			Vector2 v9 = { 400, 100 };
 			Vector2 v10 = MeasureTextEx(font, "About", 128, 0) / 2.0f;
 			Vector2 v11 = { 400, 300 };
-			Vector2 v12 = MeasureTextEx(font, "A little game about golf made in cpp using raylib\nPart of dutu's Nerve Collection\nTo learn more, watch my yt\nMade with <3 by dutudev", 32, 0) / 2.0f;
+			Vector2 v12 = MeasureTextEx(font, "A little game about golf made in cpp using raylib\nPart of dutu's Nerve Collection\nGolf club made by Ale :)\nMade with <3 by dutudev", 32, 0) / 2.0f;
 			float timeCur = finishTime - startTime;
 			int mins, secs, msecs;
 			mins = timeCur / 60;
@@ -288,7 +289,7 @@ int WinMain() {
 			case 0:
 				
 
-				DrawTextureEx(goofyLogoTexture, { 15, GetScreenHeight() / 2.0f - goofyLogoTexture.height - 25.0f + ((float)(sin(GetTime() * 3.5f)*sin(GetTime() * 3.5f))) / 2.0f * 25.0f }, 0, 2, WHITE);
+				DrawTextureEx(goofyLogoTexture, { 280.0f - goofyLogoTexture.width, 300.0f - goofyLogoTexture.height + ((float)(sin(GetTime() * 3.5f)*sin(GetTime() * 3.5f))) / 2.0f * 25.0f }, 0, 2, WHITE);
 				
 				DrawTextPro(font, "Start", v1 - v2, { 0,0 }, 0, 64, 0, WHITE);
 				
@@ -322,7 +323,7 @@ int WinMain() {
 			case 1:
 				
 				DrawTextPro(font, "About", v9 - v10, { 0,0 }, 0, 128, 0, WHITE);
-				DrawTextPro(font, "A little game about golf made in cpp using raylib\nPart of dutu's Nerve Collection\nTo learn more, watch my yt\nMade with <3 by dutudev", v11 - v12, { 0,0 }, 0, 32, 0, WHITE);
+				DrawTextPro(font, "A little game about golf made in cpp using raylib\nPart of dutu's Nerve Collection\nGolf club made by Ale :)\nMade with <3 by dutudev", v11 - v12, { 0,0 }, 0, 32, 0, WHITE);
 				DrawTextPro(font, "Back To Main Menu", Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0) / 2.0f, {0,0}, 0, 64, 0, WHITE);
 				DrawRectangleRoundedLinesEx({ (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0)/2.0f).x-10, (Vector2{ 400, 525 } - MeasureTextEx(font, "Back To Main Menu", 64, 0)/2.0f).y-5, MeasureTextEx(font, "Back To Main Menu", 64, 0).x + 20, MeasureTextEx(font, "Back To Main Menu", 64, 0).y + 10 }, 0.2f, 2, (sin(GetTime() * 6.0f) + 1) / 2.0f * 4 + 2, WHITE); // got tired of declaring vectors but this is awful
 				break;
@@ -370,8 +371,13 @@ int WinMain() {
 			for (Rectangle rect : mapWalls) {
 				//DrawRectangle(rect.x, rect.y, rect.width, rect.height, { 255, 255, 255, 150 });
 				DrawRectangleLines(rect.x, rect.y, rect.width, rect.height, RED);
-				DrawCircleLines(ball.GetMiddlePosition().x, ball.GetMiddlePosition().y, 15, RED);
+				//DrawCircleLines(ball.GetMiddlePosition().x, ball.GetMiddlePosition().y, 15, RED);
 				DrawCircleLines(currentMap.GetHolePos().x, currentMap.GetHolePos().y, 10, RED);
+
+				DrawCircleLines(ball.GetMiddlePosition().x + 2, ball.GetMiddlePosition().y, 12, RED);
+				//DrawCircleLines(ball.GetMiddlePosition().x - 2, ball.GetMiddlePosition().y, 12, RED);
+				//DrawCircleLines(ball.GetMiddlePosition().x, ball.GetMiddlePosition().y + 2, 12, RED);
+				//DrawCircleLines(ball.GetMiddlePosition().x, ball.GetMiddlePosition().y - 2, 12, RED);
 			}*/
 		}
 

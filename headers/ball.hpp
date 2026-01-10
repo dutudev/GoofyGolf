@@ -9,10 +9,11 @@ class Ball {
 private:
 	const float decedeceleration = 565.0f;
 	const Vector2 size = {30, 30};
+	const int precision = 5;
 	
 	bool hitHole = false;
 	float hitProgress = 1.5f;
-	Vector2 position = { 0, 0 };
+	Vector2 position = { 0, 0 }, lastPosition = { 0, 0 };
 	Vector2 velocity = { 0, 0 };
 	Vector2 hitPosition = { 0, 0 };
 	Texture ballTexture;
